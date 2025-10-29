@@ -86,13 +86,13 @@ class GoogleApiSetup {
             
             // Add Google API credentials to .env file
             const googleApiConfig = `
-# Google API Configuration
-GOOGLE_CLIENT_ID=${clientId}
-GOOGLE_CLIENT_SECRET=${clientSecret}
-GOOGLE_REDIRECT_URI=${redirectUri}
-ENCRYPTED_GOOGLE_ACCESS_TOKEN=${encryptedAccessToken}
-ENCRYPTED_GOOGLE_REFRESH_TOKEN=${encryptedRefreshToken}
-`;
+            # Google API Configuration
+            GOOGLE_CLIENT_ID=${clientId}
+            GOOGLE_CLIENT_SECRET=${clientSecret}
+            GOOGLE_REDIRECT_URI=${redirectUri}
+            ENCRYPTED_GOOGLE_ACCESS_TOKEN=${encryptedAccessToken}
+            ENCRYPTED_GOOGLE_REFRESH_TOKEN=${encryptedRefreshToken}
+            `;
 
             // Append to .env file
             fs.appendFileSync(this.envPath, googleApiConfig);
