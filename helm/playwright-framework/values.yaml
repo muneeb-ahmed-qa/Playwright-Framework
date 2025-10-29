@@ -1,0 +1,180 @@
+# Default values for playwright-framework
+# This is a YAML-formatted file.
+
+replicaCount: 3
+
+image:
+  repository: ghcr.io/your-username/playwright-test-framework
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 9323
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: playwright.your-domain.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# Environment configuration
+env:
+  NODE_ENV: "production"
+  CI: "true"
+  PLAYWRIGHT_BROWSERS_PATH: "/ms-playwright"
+  TEST_RESULTS_PATH: "/app/test-results"
+  PERFORMANCE_REPORTS_PATH: "/app/performance-reports"
+  DATA_DIR: "/app/test-data"
+  BASE_URL: "https://your-app.com"
+  API_BASE_URL: "https://api.your-app.com"
+  TIMEOUT: "30000"
+  RETRIES: "2"
+  WORKERS: "4"
+
+# Secrets
+secrets:
+  ENCRYPTION_KEY: "your-32-character-secret-key-here-change-this-in-production"
+  GMAIL_EMAIL: "test@example.com"
+  GMAIL_PASSWORD: "testpassword"
+  GOOGLE_CLIENT_ID: "your-google-client-id"
+  GOOGLE_CLIENT_SECRET: "your-google-client-secret"
+  API_TOKEN: "your-api-token"
+  SLACK_WEBHOOK: "https://hooks.slack.com/services/your-webhook"
+
+# Persistent volumes
+persistence:
+  enabled: true
+  storageClass: "nfs-client"
+  accessMode: ReadWriteMany
+  size: 10Gi
+
+# PostgreSQL database
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "postgres"
+    username: "playwright"
+    password: "playwright"
+    database: "playwright"
+  primary:
+    persistence:
+      enabled: true
+      size: 8Gi
+
+# Redis cache
+redis:
+  enabled: true
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: true
+      size: 2Gi
+
+# Monitoring
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+    scrapeTimeout: 10s
+
+# Health checks
+healthCheck:
+  enabled: true
+  path: /health
+  port: 9323
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Readiness probe
+readinessProbe:
+  enabled: true
+  path: /ready
+  port: 9323
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+# Test configuration
+testConfig:
+  browsers: ["chromium", "firefox", "webkit"]
+  parallel: true
+  workers: 4
+  timeout: 30000
+  retries: 2
+  reporter: "html"
+  headless: true
+  video: true
+  screenshot: true
+  trace: true
+
+# Performance testing
+performance:
+  enabled: true
+  thresholds:
+    lcp: 2500
+    fid: 100
+    cls: 0.1
+    fcp: 1800
+    tti: 3800
+
+# Data management
+dataManagement:
+  enabled: true
+  cleanupStrategy: "auto"
+  retention: "24h"
+  exportFormats: ["json", "csv"]

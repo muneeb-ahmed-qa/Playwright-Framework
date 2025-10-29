@@ -1,0 +1,94 @@
+name: TCU Test Suite 
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 14 * * *' # Runs at 1:00AM AEDT (Sydney time)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+      MAIN_USER_AU_ENCRYPTED_PASSWORD: ${{ secrets.MAIN_USER_AU_ENCRYPTED_PASSWORD }}
+      MAIN_USER_EU_ENCRYPTED_PASSWORD: ${{ secrets.MAIN_USER_EU_ENCRYPTED_PASSWORD }}
+      TCU_AU_ENCRYPTED_PASSWORD: ${{ secrets.TCU_AU_ENCRYPTED_PASSWORD }}
+      REC_AU_USER_ENCRYPTED_PASSWORD: ${{ secrets.REC_AU_USER_ENCRYPTED_PASSWORD }}
+      REFERENCE_USER_ENCRYPTED_PASSWORD: ${{ secrets.REFERENCE_USER_ENCRYPTED_PASSWORD }}
+      REFERENCE_EU_USER_ENCRYPTED_PASSWORD: ${{ secrets.REFERENCE_EU_USER_ENCRYPTED_PASSWORD }}
+      PULSE_AU_USER_ENCRYPTED_PASSWORD: ${{ secrets.PULSE_AU_USER_ENCRYPTED_PASSWORD }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            playwright-${{ runner.os }}-
+            
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Create credentials.json
+        run: echo '${{ secrets.CREDENTIALS_JSON }}' > credentials.json
+
+      - name: Create token.json
+        run: echo '${{ secrets.TOKEN_JSON }}' > token.json
+
+      # only runs tcu tagged tests
+      - name: Run TCU Playwright tests
+        run: npm run test:tcu || true
+
+      - name: Debug report
+        run: ls -l playwright-report-tcu && cat playwright-report-tcu/report.json
+      
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-tcu
+          path: playwright-report-tcu/
+          retention-days: 7
+
+      - name: Make extract script executable
+        run: chmod +x ./extract_playwright_tcu.sh
+
+      - name: Extract test summary
+        id: summary
+        run: |
+          {
+            echo 'summary<<EOF'
+            ./extract_playwright_tcu.sh
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Send Slack notification
+        run: |
+          ARTIFACT_URL="https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          SUMMARY="${{ steps.summary.outputs.summary }}"
+      
+          PAYLOAD=$(jq -n \
+            --arg summary "$SUMMARY" \
+            --arg url "$ARTIFACT_URL" \
+            --arg repo "$GITHUB_REPOSITORY" \
+            '{
+              attachments: [
+                { color: "#36a64f", title: ("TCU Test Suite Results for " + $repo), text: $summary },
+                { color: "#439FE0", text: "<\($url)|Download HTML Report Artifacts>" }
+              ]
+            }'
+          )
+      
+          curl -X POST -H 'Content-type: application/json' --data "$PAYLOAD" ${{ secrets.SLACK_WEBHOOK_URL }}

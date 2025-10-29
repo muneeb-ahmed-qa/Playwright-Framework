@@ -1,0 +1,139 @@
+version: '3.8'
+
+services:
+  # Main test runner
+  playwright-tests:
+    build:
+      context: .
+      target: test-runner
+    container_name: playwright-test-runner
+    environment:
+      - CI=true
+      - NODE_ENV=test
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    networks:
+      - test-network
+    depends_on:
+      - test-app
+
+  # Performance tests
+  performance-tests:
+    build:
+      context: .
+      target: performance
+    container_name: playwright-performance-tests
+    environment:
+      - CI=true
+      - NODE_ENV=performance
+    volumes:
+      - ./test-results:/app/test-results
+      - ./performance-reports:/app/performance-reports
+    networks:
+      - test-network
+    depends_on:
+      - test-app
+
+  # Data management tests
+  data-management-tests:
+    build:
+      context: .
+      target: data-management
+    container_name: playwright-data-tests
+    environment:
+      - CI=true
+      - NODE_ENV=test
+    volumes:
+      - ./test-data:/app/test-data
+      - ./test-results:/app/test-results
+    networks:
+      - test-network
+
+  # Test application (mock server)
+  test-app:
+    image: nginx:alpine
+    container_name: test-application
+    ports:
+      - "8080:80"
+    volumes:
+      - ./test-app:/usr/share/nginx/html
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Database for testing
+  test-database:
+    image: postgres:15-alpine
+    container_name: test-database
+    environment:
+      - POSTGRES_DB=testdb
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U testuser -d testdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching
+  test-redis:
+    image: redis:7-alpine
+    container_name: test-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - test-redis-data:/data
+    networks:
+      - test-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Test results server
+  test-results-server:
+    build:
+      context: .
+      target: production
+    container_name: test-results-server
+    ports:
+      - "9323:9323"
+    volumes:
+      - ./playwright-report:/app/playwright-report
+    command: ["npx", "playwright", "show-report", "--host", "0.0.0.0", "--port", "9323"]
+    networks:
+      - test-network
+
+  # Monitoring
+  test-monitor:
+    image: grafana/grafana:latest
+    container_name: test-monitor
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - test-grafana-data:/var/lib/grafana
+    networks:
+      - test-network
+
+volumes:
+  test-db-data:
+  test-redis-data:
+  test-grafana-data:
+
+networks:
+  test-network:
+    driver: bridge

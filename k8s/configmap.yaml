@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: playwright-config
+  namespace: playwright-framework
+data:
+  NODE_ENV: "production"
+  CI: "true"
+  PLAYWRIGHT_BROWSERS_PATH: "/ms-playwright"
+  TEST_RESULTS_PATH: "/app/test-results"
+  PERFORMANCE_REPORTS_PATH: "/app/performance-reports"
+  DATA_DIR: "/app/test-data"
+  # Add your application-specific configuration here
+  BASE_URL: "https://your-app.com"
+  API_BASE_URL: "https://api.your-app.com"
+  TIMEOUT: "30000"
+  RETRIES: "2"
+  WORKERS: "4"

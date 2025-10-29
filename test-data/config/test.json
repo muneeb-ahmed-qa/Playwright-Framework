@@ -1,0 +1,51 @@
+{
+  "users": {
+    "count": 10,
+    "roles": ["admin", "user", "guest"],
+    "domains": ["example.com", "test.com"],
+    "defaultRole": "user",
+    "includeProfile": true,
+    "includePreferences": false
+  },
+  "products": {
+    "count": 50,
+    "categories": ["electronics", "clothing", "books", "home", "sports"],
+    "priceRange": { "min": 10, "max": 1000 },
+    "includeImages": true,
+    "includeReviews": false
+  },
+  "orders": {
+    "defaultStatus": "pending",
+    "includeItems": true,
+    "maxItems": 5
+  },
+  "api": {
+    "baseUrl": "https://api.example.com",
+    "timeout": 10000,
+    "retries": 3,
+    "defaultHeaders": {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    }
+  },
+  "cleanup": {
+    "auto": true,
+    "strategies": ["database", "api", "file"],
+    "retention": "24h",
+    "cleanupHooks": []
+  },
+  "validation": {
+    "user": {
+      "id": { "required": true, "type": "string" },
+      "email": { "required": true, "type": "string", "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" },
+      "username": { "required": true, "type": "string", "minLength": 3, "maxLength": 50 },
+      "role": { "required": true, "type": "string", "enum": ["admin", "user", "guest"] }
+    },
+    "product": {
+      "id": { "required": true, "type": "string" },
+      "name": { "required": true, "type": "string", "minLength": 1, "maxLength": 200 },
+      "price": { "required": true, "type": "number", "min": 0 },
+      "category": { "required": true, "type": "string" }
+    }
+  }
+}

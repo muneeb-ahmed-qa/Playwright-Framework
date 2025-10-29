@@ -1,0 +1,26 @@
+apiVersion: v2
+name: playwright-framework
+description: A Helm chart for Playwright Test Framework
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://github.com/your-username/playwright-automation-framework
+sources:
+  - https://github.com/your-username/playwright-automation-framework
+maintainers:
+  - name: Your Name
+    email: your.email@example.com
+keywords:
+  - playwright
+  - testing
+  - automation
+  - e2e
+dependencies:
+  - name: postgresql
+    version: "12.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: postgresql.enabled
+  - name: redis
+    version: "17.x.x"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled

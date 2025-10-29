@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playwright-framework
+  namespace: playwright-framework
+  labels:
+    app: playwright-framework
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: playwright-framework
+  template:
+    metadata:
+      labels:
+        app: playwright-framework
+    spec:
+      containers:
+      - name: playwright-framework
+        image: ghcr.io/your-username/playwright-test-framework:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9323
+          name: http
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: playwright-config
+              key: NODE_ENV
+        - name: CI
+          valueFrom:
+            configMapKeyRef:
+              name: playwright-config
+              key: CI
+        - name: PLAYWRIGHT_BROWSERS_PATH
+          valueFrom:
+            configMapKeyRef:
+              name: playwright-config
+              key: PLAYWRIGHT_BROWSERS_PATH
+        - name: BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: playwright-config
+              key: BASE_URL
+        - name: API_BASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: playwright-config
+              key: API_BASE_URL
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: ENCRYPTION_KEY
+        - name: GMAIL_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: GMAIL_EMAIL
+        - name: GMAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: GMAIL_PASSWORD
+        - name: GOOGLE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: GOOGLE_CLIENT_ID
+        - name: GOOGLE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: GOOGLE_CLIENT_SECRET
+        - name: API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: playwright-secrets
+              key: API_TOKEN
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: test-results
+          mountPath: /app/test-results
+        - name: performance-reports
+          mountPath: /app/performance-reports
+        - name: test-data
+          mountPath: /app/test-data
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9323
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9323
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: test-results
+        persistentVolumeClaim:
+          claimName: test-results-pvc
+      - name: performance-reports
+        persistentVolumeClaim:
+          claimName: performance-reports-pvc
+      - name: test-data
+        persistentVolumeClaim:
+          claimName: test-data-pvc
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

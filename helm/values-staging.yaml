@@ -1,0 +1,48 @@
+# Staging environment values
+replicaCount: 2
+
+image:
+  tag: "staging"
+
+env:
+  NODE_ENV: "staging"
+  BASE_URL: "https://staging.your-app.com"
+  API_BASE_URL: "https://staging-api.your-app.com"
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+postgresql:
+  auth:
+    postgresPassword: "staging-postgres"
+    username: "playwright"
+    password: "staging-playwright"
+    database: "playwright_staging"
+  primary:
+    persistence:
+      size: 4Gi
+
+redis:
+  master:
+    persistence:
+      size: 1Gi
+
+testConfig:
+  browsers: ["chromium"]
+  parallel: false
+  workers: 2
+  headless: true
+
+performance:
+  enabled: false

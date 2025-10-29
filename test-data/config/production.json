@@ -1,0 +1,38 @@
+{
+  "users": {
+    "count": 5,
+    "roles": ["admin", "user"],
+    "domains": ["company.com"],
+    "defaultRole": "user",
+    "includeProfile": true,
+    "includePreferences": true
+  },
+  "products": {
+    "count": 20,
+    "categories": ["electronics", "clothing"],
+    "priceRange": { "min": 50, "max": 500 },
+    "includeImages": true,
+    "includeReviews": true
+  },
+  "orders": {
+    "defaultStatus": "pending",
+    "includeItems": true,
+    "maxItems": 3
+  },
+  "api": {
+    "baseUrl": "https://api.company.com",
+    "timeout": 15000,
+    "retries": 5,
+    "defaultHeaders": {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+      "Authorization": "Bearer ${API_TOKEN}"
+    }
+  },
+  "cleanup": {
+    "auto": true,
+    "strategies": ["database", "api"],
+    "retention": "1h",
+    "cleanupHooks": ["cleanupProductionData"]
+  }
+}

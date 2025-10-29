@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Test results and reports
+test-results/
+playwright-report/
+playwright-report-tcu/
+
+# Environment variables
+.env
+
+# Sensitive credentials
+credentials.json
+token.json
+auth.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Reports
+report.json
+
+# Images (if needed in git)
+# confirmlink.png

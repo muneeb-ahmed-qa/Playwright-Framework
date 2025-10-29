@@ -1,0 +1,261 @@
+{
+  "users": {
+    "admin": {
+      "username": "admin@example.com",
+      "password": "admin123",
+      "role": "admin",
+      "firstName": "Admin",
+      "lastName": "User",
+      "permissions": ["read", "write", "delete", "manage"]
+    },
+    "regular": {
+      "username": "user@example.com",
+      "password": "user123",
+      "role": "user",
+      "firstName": "Regular",
+      "lastName": "User",
+      "permissions": ["read", "write"]
+    },
+    "guest": {
+      "username": "guest@example.com",
+      "password": "guest123",
+      "role": "guest",
+      "firstName": "Guest",
+      "lastName": "User",
+      "permissions": ["read"]
+    }
+  },
+  "forms": {
+    "contact": {
+      "name": "John Doe",
+      "email": "john.doe@example.com",
+      "phone": "+1 (555) 123-4567",
+      "subject": "General Inquiry",
+      "message": "This is a test message for the contact form. I would like to know more about your services.",
+      "agreeToTerms": true,
+      "newsletter": false
+    },
+    "registration": {
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "email": "jane.smith@example.com",
+      "password": "SecurePass123!",
+      "confirmPassword": "SecurePass123!",
+      "phone": "+1 (555) 987-6543",
+      "dateOfBirth": "1990-05-15",
+      "gender": "female",
+      "country": "United States",
+      "state": "California",
+      "city": "San Francisco",
+      "zipCode": "94102",
+      "agreeToTerms": true,
+      "marketingEmails": true
+    },
+    "feedback": {
+      "rating": 5,
+      "category": "Bug Report",
+      "title": "Login Issue",
+      "description": "I am experiencing issues with the login functionality. The page sometimes doesn't load properly.",
+      "browser": "Chrome",
+      "version": "91.0.4472.124",
+      "os": "Windows 10",
+      "stepsToReproduce": "1. Go to login page\n2. Enter credentials\n3. Click login button\n4. Page doesn't respond",
+      "expectedBehavior": "User should be logged in successfully",
+      "actualBehavior": "Page hangs and doesn't redirect",
+      "priority": "High",
+      "contactEmail": "feedback@example.com"
+    }
+  },
+  "ecommerce": {
+    "products": [
+      {
+        "id": 1,
+        "name": "Wireless Headphones",
+        "price": 99.99,
+        "category": "Electronics",
+        "description": "High-quality wireless headphones with noise cancellation",
+        "inStock": true,
+        "quantity": 50
+      },
+      {
+        "id": 2,
+        "name": "Smart Watch",
+        "price": 299.99,
+        "category": "Electronics",
+        "description": "Advanced smart watch with health monitoring features",
+        "inStock": true,
+        "quantity": 25
+      },
+      {
+        "id": 3,
+        "name": "Laptop Stand",
+        "price": 49.99,
+        "category": "Accessories",
+        "description": "Adjustable laptop stand for better ergonomics",
+        "inStock": false,
+        "quantity": 0
+      }
+    ],
+    "shipping": {
+      "standard": {
+        "name": "Standard Shipping",
+        "cost": 5.99,
+        "deliveryTime": "3-5 business days"
+      },
+      "express": {
+        "name": "Express Shipping",
+        "cost": 12.99,
+        "deliveryTime": "1-2 business days"
+      },
+      "overnight": {
+        "name": "Overnight Shipping",
+        "cost": 24.99,
+        "deliveryTime": "Next business day"
+      }
+    },
+    "payment": {
+      "creditCard": {
+        "number": "4111111111111111",
+        "expiryDate": "12/25",
+        "cvv": "123",
+        "cardholderName": "John Doe"
+      },
+      "paypal": {
+        "email": "john.doe@example.com",
+        "password": "paypal123"
+      }
+    }
+  },
+  "api": {
+    "endpoints": {
+      "login": "/api/auth/login",
+      "logout": "/api/auth/logout",
+      "users": "/api/users",
+      "products": "/api/products",
+      "orders": "/api/orders"
+    },
+    "responses": {
+      "success": {
+        "status": 200,
+        "message": "Success",
+        "data": {}
+      },
+      "unauthorized": {
+        "status": 401,
+        "message": "Unauthorized",
+        "error": "Invalid credentials"
+      },
+      "notFound": {
+        "status": 404,
+        "message": "Not Found",
+        "error": "Resource not found"
+      },
+      "serverError": {
+        "status": 500,
+        "message": "Internal Server Error",
+        "error": "Something went wrong"
+      }
+    }
+  },
+  "testScenarios": {
+    "login": {
+      "validCredentials": {
+        "username": "test@example.com",
+        "password": "password123",
+        "expectedResult": "success"
+      },
+      "invalidCredentials": {
+        "username": "invalid@example.com",
+        "password": "wrongpassword",
+        "expectedResult": "error"
+      },
+      "emptyFields": {
+        "username": "",
+        "password": "",
+        "expectedResult": "validation_error"
+      }
+    },
+    "formValidation": {
+      "requiredFields": ["name", "email", "message"],
+      "emailValidation": {
+        "valid": ["test@example.com", "user.name@domain.co.uk"],
+        "invalid": ["invalid-email", "@domain.com", "test@"]
+      },
+      "phoneValidation": {
+        "valid": ["+1 (555) 123-4567", "555-123-4567", "(555) 123-4567"],
+        "invalid": ["123", "abc-def-ghij", "555-123"]
+      }
+    },
+    "navigation": {
+      "menuItems": [
+        "Home",
+        "About",
+        "Services",
+        "Products",
+        "Contact",
+        "Login",
+        "Register"
+      ],
+      "expectedUrls": {
+        "Home": "/",
+        "About": "/about",
+        "Services": "/services",
+        "Products": "/products",
+        "Contact": "/contact",
+        "Login": "/login",
+        "Register": "/register"
+      }
+    }
+  },
+  "environments": {
+    "development": {
+      "baseUrl": "http://localhost:3000",
+      "apiUrl": "http://localhost:3001/api",
+      "database": "test_db"
+    },
+    "staging": {
+      "baseUrl": "https://staging.example.com",
+      "apiUrl": "https://staging-api.example.com/api",
+      "database": "staging_db"
+    },
+    "production": {
+      "baseUrl": "https://example.com",
+      "apiUrl": "https://api.example.com/api",
+      "database": "production_db"
+    }
+  },
+  "browsers": {
+    "chrome": {
+      "name": "Chrome",
+      "version": "91.0.4472.124",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    },
+    "firefox": {
+      "name": "Firefox",
+      "version": "89.0",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
+    },
+    "safari": {
+      "name": "Safari",
+      "version": "14.1.1",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15"
+    }
+  },
+  "devices": {
+    "desktop": {
+      "viewport": { "width": 1920, "height": 1080 },
+      "deviceScaleFactor": 1,
+      "isMobile": false
+    },
+    "tablet": {
+      "viewport": { "width": 768, "height": 1024 },
+      "deviceScaleFactor": 2,
+      "isMobile": false
+    },
+    "mobile": {
+      "viewport": { "width": 375, "height": 667 },
+      "deviceScaleFactor": 2,
+      "isMobile": true
+    }
+  }
+}

@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: playwright-framework-service
+  namespace: playwright-framework
+  labels:
+    app: playwright-framework
+spec:
+  selector:
+    app: playwright-framework
+  ports:
+  - name: http
+    port: 80
+    targetPort: 9323
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: playwright-framework-headless
+  namespace: playwright-framework
+  labels:
+    app: playwright-framework
+spec:
+  selector:
+    app: playwright-framework
+  ports:
+  - name: headless
+    port: 9222
+    targetPort: 9222
+    protocol: TCP
+  type: ClusterIP

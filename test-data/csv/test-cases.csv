@@ -1,0 +1,7 @@
+username,password,expectedResult,description
+admin,admin123,success,Valid admin credentials
+user,user123,success,Valid user credentials
+guest,guest123,success,Valid guest credentials
+invalid,invalid123,failure,Invalid credentials
+admin,wrongpassword,failure,Valid username with wrong password
+wronguser,admin123,failure,Invalid username with valid password

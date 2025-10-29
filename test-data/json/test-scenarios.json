@@ -1,0 +1,77 @@
+{
+  "scenarios": [
+    {
+      "name": "User Registration",
+      "endpoint": "/api/users",
+      "method": "POST",
+      "data": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "email": "john.doe@example.com",
+        "password": "SecurePass123!"
+      },
+      "expectedStatus": "201",
+      "expectedResponse": {
+        "success": true,
+        "message": "User created successfully"
+      }
+    },
+    {
+      "name": "Product Creation",
+      "endpoint": "/api/products",
+      "method": "POST",
+      "data": {
+        "name": "Test Product",
+        "description": "A test product for automation",
+        "price": 99.99,
+        "category": "electronics"
+      },
+      "expectedStatus": "201",
+      "expectedResponse": {
+        "success": true,
+        "message": "Product created successfully"
+      }
+    },
+    {
+      "name": "Order Processing",
+      "endpoint": "/api/orders",
+      "method": "POST",
+      "data": {
+        "userId": "user-123",
+        "items": [
+          {
+            "productId": "product-456",
+            "quantity": 2,
+            "price": 99.99
+          }
+        ],
+        "totalAmount": 199.98
+      },
+      "expectedStatus": "201",
+      "expectedResponse": {
+        "success": true,
+        "message": "Order created successfully"
+      }
+    },
+    {
+      "name": "Invalid Data Validation",
+      "endpoint": "/api/users",
+      "method": "POST",
+      "data": {
+        "firstName": "",
+        "lastName": "Doe",
+        "email": "invalid-email",
+        "password": "123"
+      },
+      "expectedStatus": "400",
+      "expectedResponse": {
+        "success": false,
+        "errors": [
+          "First name is required",
+          "Email format is invalid",
+          "Password must be at least 8 characters"
+        ]
+      }
+    }
+  ]
+}
