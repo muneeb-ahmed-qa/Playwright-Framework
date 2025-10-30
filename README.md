@@ -1397,14 +1397,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Microsoft](https://microsoft.com/) - For creating Playwright
 - The open-source community for inspiration and best practices
 
-👨‍💻 Author
+## 👨‍💻 Author
 Muneeb Ahmed
 GitHub: https://github.com/muneeb-ahmed-qa
 LinkedIn: https://www.linkedin.com/in/muneeb-ahmed-0123
 
-📞 Contact
+## 📞 Contact
 For questions or collaboration opportunities, please reach out via:
-
 LinkedIn: https://www.linkedin.com/in/muneeb-ahmed-0123
 
 ---
